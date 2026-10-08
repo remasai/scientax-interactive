@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Charging the Long Haul – Interactive Tools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f5f1;--card:#fff;--text:#12263f;--muted:#5d6b7c;--line:#dfe3e8;--acc:#2e7d6b;--lime:#8fb81f;--soft:#e8f0d4;--bad:#c0392b;--good:#2e7d32}
+:root[data-theme="dark"]{--bg:#0c1829;--card:#13253c;--text:#eaf0f7;--muted:#9fb0c3;--line:#23395a;--acc:#4fc3a1;--lime:#b6e03a;--soft:#1c3347;--bad:#ff8a7a;--good:#7be08a}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1829;--card:#13253c;--text:#eaf0f7;--muted:#9fb0c3;--line:#23395a;--acc:#4fc3a1;--lime:#b6e03a;--soft:#1c3347;--bad:#ff8a7a;--good:#7be08a}}
+html{scroll-padding-top:110px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:16px;margin:0}h1 span{color:var(--lime)}
+button{font:inherit;cursor:pointer}
+#theme{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:13px}
+nav{display:flex;gap:6px;margin-top:8px;overflow-x:auto}
+nav a{flex:1;text-align:center;white-space:nowrap;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600}
+main{max-width:860px;margin:0 auto;padding:14px}
+section{margin-bottom:28px}
+.tag{display:inline-block;background:var(--text);color:var(--bg);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700}
+h2{font-size:20px;margin:8px 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 10px;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:block;font-size:12px;color:var(--muted)}
+input[type=number]{width:100%;margin-top:3px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font-size:15px}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
+.k{background:var(--soft);border-radius:10px;padding:10px}
+.k b{display:block;font-size:22px}.k small{color:var(--muted);font-size:12px}
+.k.hl{border:2px solid var(--lime)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:5px 3px;text-align:center}th{color:var(--muted);font-weight:600}
+td input{padding:5px;font-size:14px;text-align:center}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+.verdict{margin-top:10px;padding:10px;border-radius:10px;font-weight:600;background:var(--soft)}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--acc);width:0}
+.pos{color:var(--good)}.neg{color:var(--bad)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 14px 24px}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><h1>Charging the Long Haul <span>·</span> Interactive Tools</h1>
+ <button id="theme" aria-label="Toggle theme">🌙 Dark</button></div>
+ <nav><a href="#q1">Q1 Market</a><a href="#q2">Q2 Capital</a><a href="#q3">Q3 Value</a><a href="#q4">Q4 Deal</a></nav>
+</header>
+<main>
+
+<section id="q1"><span class="tag">Q1</span><h2>Market size &amp; number of trucks</h2>
+<p class="sub">Freight → loaded trips → truck-km → fleet → annual leasing market.</p>
+<div class="card"><h3>Inputs</h3><div class="grid">
+<label>Freight moved (M tonnes/yr)<input type="number" id="t" value="300"></label>
+<label>Load per trip (tonnes)<input type="number" id="ld" value="25"></label>
+<label>Avg one-way trip (km)<input type="number" id="km" value="597.33" step="0.01"></label>
+<label>km per truck-year<input type="number" id="tky" value="120000"></label>
+<label>Lease per truck ($k/yr)<input type="number" id="ls" value="55"></label>
+<label>Rakiza trucks today<input type="number" id="rt" value="850"></label>
+<label>Rakiza Year-5 trucks<input type="number" id="r5" value="3600"></label></div>
+<div class="out" id="o1"></div>
+<p class="note">Default trip length 597 km = corridor-by-corridor build (7.17B truck-km). Cross-check: set 600 km → 7.2B km. Loaded moves only, no empty-run uplift.</p></div>
+</section>
+
+<section id="q2"><span class="tag">Q2</span><h2>Investment needed for the five-year plan</h2>
+<p class="sub">Incremental assets only: new trucks + new commercial hubs (excludes today's 850 trucks and 5 pilots).</p>
+<div class="card"><h3>Plan by year (editable)</h3>
+<table><thead><tr><th></th><th>Y1</th><th>Y2</th><th>Y3</th><th>Y4</th><th>Y5</th></tr></thead>
+<tbody><tr><td>Net new trucks</td></tr><tr><td>New hubs</td></tr><tr><td>Capital $M</td></tr></tbody></table>
+<div class="grid" style="margin-top:12px">
+<label>Cost per truck ($k)<input type="number" id="tc" value="250"></label>
+<label>Cost per hub ($M)<input type="number" id="hc" value="5" step="0.5"></label>
+<label>Equity ask ($M)<input type="number" id="ask" value="120"></label></div>
+<div class="out" id="o2"></div></div>
+</section>
+
+<section id="q3"><span class="tag">Q3</span><h2>What is Rakiza worth today?</h2>
+<p class="sub">Year-5 revenue × exit multiple, marked down for the foreign benchmark, discounted at Qafila's cost of capital.</p>
+<div class="card"><h3>Inputs</h3><div class="grid">
+<label>Year-5 revenue ($M)<input type="number" id="rev" value="361"></label>
+<label>Comparable deal ($M for stake)<input type="number" id="cd" value="250"></label>
+<label>Stake bought (%)<input type="number" id="cs" value="25"></label>
+<label>Comparable revenue ($M)<input type="number" id="cr" value="410"></label>
+<label>Benchmark mark-down (%)<input type="number" id="md" value="20"></label>
+<label>Discount rate (%)<input type="number" id="dr" value="12" step="0.5"></label>
+<label>Years<input type="number" id="yr" value="5"></label>
+<label>Revenue haircut (%)<input type="number" id="hc3" value="0"></label></div>
+<div class="out" id="o3"></div>
+<p class="note">Set revenue haircut to 20 for the downside ($320M); set mark-down to 0 for the upside ($500M).</p></div>
+</section>
+
+<section id="q4"><span class="tag">Q4</span><h2>Should Qafila invest, and on what terms?</h2>
+<p class="sub">Test entry price, tranches, and the two execution gates: hub utilization and truck mileage.</p>
+<div class="card"><h3>Deal terms</h3><div class="grid">
+<label>Entry post-money ($M)<input type="number" id="pm" value="400"></label>
+<label>Investment ($M)<input type="number" id="inv" value="120"></label>
+<label>Tranche 1 share (%)<input type="number" id="tr" value="50"></label></div>
+<div class="out" id="o4"></div></div>
+<div class="card"><h3>Gate 1 · Hub utilization</h3>
+<label>Utilization: <b id="uv">60</b>%<input type="range" id="u" min="35" max="90" value="60"></label>
+<div class="out" id="o5"></div></div>
+<div class="card"><h3>Gate 2 · Truck mileage</h3>
+<label>Avg km per truck per year<input type="number" id="mk" value="120450"></label>
+<div class="bar"><i id="mb"></i></div><div class="out" id="o6"></div></div>
+<div class="verdict" id="vd"></div>
+</section>
+</main>
+<footer>Source: case brief Exhibits 1–8 and data room; team analysis. Inputs are editable, defaults match the submitted deck.</footer>
+
+<script>
+const $=id=>document.getElementById(id), v=id=>parseFloat($(id).value)||0;
+const f=(n,d=0)=>n.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const K=(l,b,s,h)=>`<div class="k${h?' hl':''}"><small>${l}</small><b>${b}</b><small>${s||''}</small></div>`;
+
+// theme
+const root=document.documentElement,btn=$('theme');
+function setTheme(t){root.dataset.theme=t;btn.textContent=t==='dark'?'☀️ Light':'🌙 Dark'}
+setTheme(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+btn.onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+
+// Q2 table
+const tr=[...document.querySelectorAll('#q2 tbody tr')],tv=[350,500,700,600,600],hv=[8,4,8,12,13];
+tv.forEach((x,i)=>tr[0].insertAdjacentHTML('beforeend',`<td><input type="number" class="tv" value="${x}"></td>`));
+hv.forEach((x,i)=>tr[1].insertAdjacentHTML('beforeend',`<td><input type="number" class="hv" value="${x}"></td>`));
+for(let i=0;i<5;i++)tr[2].insertAdjacentHTML('beforeend','<td class="cy"></td>');
+
+function calc(){
+ // Q1
+ const trips=v('t')/v('ld'), tk=trips*v('km'), fleet=tk*1e6/v('tky')/1e0, mkt=fleet*v('ls')*1e3;
+ const f1=v('t')*1e6/v('ld')*v('km')/v('tky');
+ $('o1').innerHTML=K('Loaded trips',f(trips,1)+'M')+K('Truck-km',f(tk/1000,2)+'B km')+K('Implied fleet',f(f1),'trucks',1)+K('Leasing market','$'+f(f1*v('ls')/1000,2)+'B','per year',1)+K('Rakiza share today',f(v('rt')/f1*100,2)+'%')+K('Year-5 share',f(v('r5')/f1*100,2)+'%','of today\'s fleet');
+ // Q2
+ const T=[...document.querySelectorAll('.tv')].map(e=>+e.value||0),H=[...document.querySelectorAll('.hv')].map(e=>+e.value||0);
+ let tt=0,th=0;document.querySelectorAll('.cy').forEach((c,i)=>{const x=T[i]*v('tc')/1000+H[i]*v('hc');c.textContent=f(x,1);tt+=T[i];th+=H[i]});
+ const cap=tt*v('tc')/1000+th*v('hc');
+ $('o2').innerHTML=K('New trucks',f(tt),'× $'+v('tc')+'k = $'+f(tt*v('tc')/1000,1)+'M')+K('New hubs',f(th),'× $'+v('hc')+'M = $'+f(th*v('hc'),1)+'M')+K('Total capital','$'+f(cap,1)+'M','',1)+K('Funding gap','$'+f(cap-v('ask'),1)+'M',f(cap/v('ask'),1)+'× the ask')+K('Ask covers Y1 capex',f(v('ask')/(T[0]*v('tc')/1000+H[0]*v('hc'))*100)+'%');
+ // Q3
+ const mult=(v('cd')/(v('cs')/100))/v('cr'), adj=mult*(1-v('md')/100), r5=v('rev')*(1-v('hc3')/100);
+ const y5=r5*adj, df=Math.pow(1+v('dr')/100,v('yr')), val=y5/df;
+ $('o3').innerHTML=K('Comparable multiple',f(mult,2)+'×','deal value ÷ revenue')+K('Adjusted multiple',f(adj,2)+'×','after mark-down')+K('Year-5 value','$'+f(y5)+'M')+K('Discount factor',f(df,3))+K('Value today','$'+f(val)+'M','',1)+K('vs $600M ask',f((val/600-1)*100)+'%','gap $'+f(600-val)+'M');
+ // Q4
+ const pm=v('pm'),inv=v('inv'),t1=inv*v('tr')/100;
+ $('o4').innerHTML=K('Stake for $'+f(inv)+'M',f(inv/pm*100,1)+'%','at $'+f(pm)+'M post-money',1)+K('Stake at $600M ask',f(inv/600*100,1)+'%')+K('Tranche 1 / 2','$'+f(t1,0)+'M / $'+f(inv-t1,0)+'M','at closing / on milestones')+K('Remaining funding need','$'+f(cap-inv)+'M','asset-backed finance & later rounds');
+ // gates
+ const u=v('u');$('uv').textContent=u;const pr=-1.10+(u-35)*(1.31+1.10)/55;
+ $('o5').innerHTML=K('Profit per hub',(pr>=0?'+':'')+f(pr,2)+'M','per year, linear fit from sample')+K('Status',u>=60?'<span class="pos">Above break-even</span>':'<span class="neg">Below break-even</span>','break-even ≈ 60%')+K('Plan needs','~70%','Year-5 charging revenue $163M / 45 hubs');
+ const mk=v('mk');$('mb').style.width=Math.min(100,mk/170000*100)+'%';
+ $('o6').innerHTML=K('vs 140k threshold',f((mk/140000-1)*100)+'%')+K('vs 170k upper',f((mk/170000-1)*100)+'%')+K('Uplift needed to 140k',mk<140000?'+'+f((140000/mk-1)*100)+'%':'None');
+ const g1=u>=60,g2=mk>=140000;
+ $('vd').innerHTML=(g1&&g2?'✅ Both gates met: release Tranche 2.':'⛔ Hold Tranche 2: '+(!g1?'hub utilization below 60%. ':'')+(!g2?'truck mileage below 140k km.':''))+' Entry at $'+f(pm)+'M gives '+f(inv/pm*100,1)+'% vs 20% at the $600M ask.';
+}
+document.addEventListener('input',calc);calc();
+</script>
+</body>
+</html>
